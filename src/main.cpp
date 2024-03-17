@@ -100,7 +100,7 @@ bool Check_Moisture() {
 
 void updateSerial()
 {
-  // delay(500);
+  delay(500);
   while (Serial.available()) 
   {
     mySerial.write(Serial.read());//Forward what Serial received to Software Serial Port
@@ -116,10 +116,10 @@ void sendSMS(String pq) {
   Serial.println("PQ====================> ");
   Serial.print(pq);
   Serial.println("Initializing....");
-  // delay(1000);
+  delay(1000);
   mySerial.println("AT+CMGF=1"); // Configuring TEXT mode
   updateSerial();
-  // mySerial.println("AT+CMGS=\"+8801758805632\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+  mySerial.println("AT+CMGS=\"+8801758805632\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
   //updateSerial();
   updateSerial();
   mySerial.print(pq);
@@ -260,7 +260,7 @@ void loop() {
     // lcd.clear();
     // lcdprint();
   }
-  updateSerial();
+  // updateSerial();
 
   // Read from the sensor
   
