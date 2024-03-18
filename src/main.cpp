@@ -14,9 +14,9 @@ PulseOximeter pox;
 uint32_t tsLastReport = 0;
 
 // Callback routine is executed when a pulse is detected
-// void onBeatDetected() {
-//     Serial.println("Beat!");
-// }
+void onBeatDetected() {
+    Serial.println("Beat!");
+}
 
 #define outPin 8        // Defines pin number to which the sensor is connected
 
@@ -118,7 +118,7 @@ void sendSMS(String pq) {
   delay(1000);
   mySerial.println("AT+CMGF=1"); // Configuring TEXT mode
   updateSerial();
-  // mySerial.println("AT+CMGS=\"+8801758805632\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+  // mySerial.println("AT+CMGS=\"+8801816440270\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
   //updateSerial();
   updateSerial();
   mySerial.println(pq);
@@ -132,15 +132,15 @@ void sendSMS(String pq) {
 void setup() {
   Serial.begin(9600);
   //sim_Initialize();
-  // Serial.println("Initializing pulse oximeter..");
+  Serial.println("Initializing pulse oximeter..");
 
     // Initialize sensor
-    // if (!pox.begin()) {
-    //     Serial.println("FAILED");
-    //     for(;;);
-    // } else {
-    //     Serial.println("SUCCESS");
-    // }
+    if (!pox.begin()) {
+        Serial.println("FAILED");
+        for(;;);
+    } else {
+        Serial.println("SUCCESS");
+    }
 
 	
   // lcd.init();                      // initialize the lcd 
@@ -164,10 +164,10 @@ void setup() {
   // lcd.print("f");
 
   // Configure sensor to use 7.6mA for LED drive
-	// pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
+	pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
 
     // Register a callback routine
-  // pox.setOnBeatDetectedCallback(onBeatDetected);
+  pox.setOnBeatDetectedCallback(onBeatDetected);
 
 
 }
@@ -187,7 +187,7 @@ void setup() {
 
 void loop() {
   // Serial.println(millis());
-  // pox.update();
+  pox.update();
 
   // DHT.read11(outPin);
 
@@ -198,15 +198,15 @@ void loop() {
   
 
   // Grab the updated heart rate and SpO2 levels
-  // if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
-  //     Serial.print("Heart rate:");
-  //     Serial.print(pox.getHeartRate());
-  //     Serial.print("bpm / SpO2:");
-  //     Serial.print(pox.getSpO2());
-  //     Serial.println("%");
+  if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+      Serial.print("Heart rate:");
+      Serial.print(pox.getHeartRate());
+      Serial.print("bpm / SpO2:");
+      Serial.print(pox.getSpO2());
+      Serial.println("%");
 
-  //     tsLastReport = millis();
-  // }
+      tsLastReport = millis();
+  }
 
 
   pir_state = CheckMotion();
