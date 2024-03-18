@@ -14,9 +14,9 @@ PulseOximeter pox;
 uint32_t tsLastReport = 0;
 
 // Callback routine is executed when a pulse is detected
-void onBeatDetected() {
-    Serial.println("Beat!");
-}
+// void onBeatDetected() {
+//     Serial.println("Beat!");
+// }
 
 #define outPin 8        // Defines pin number to which the sensor is connected
 
@@ -68,13 +68,13 @@ String prepare_msg(float j,bool k, bool q, bool r) {
     diaper = ("Diaper is dry");
    }
   if(q==1 && r==0 ) {
-    SMS = (check + "   Temperature: " + String(j) + "C  " + diaper); 
+    SMS = (check + "   Temperature: " + String(j-10.0) + "C  " + diaper); 
   }
   else if (r == 1 && q==0) {
-    SMS = (alert + "   Temperature: " + String(j) + "C  " + diaper); 
+    SMS = (alert + "   Temperature: " + String(j-10.0) + "C  " + diaper); 
   }
   else if(r == 0 && q==0 && k ==1){
-    SMS = (diaper + "   Temperature: " + String(j) + "C  ");
+    SMS = (diaper + "   Temperature: " + String(j-10.0) + "C  ");
   }
   else {
     SMS = "Null";
@@ -113,16 +113,15 @@ void updateSerial()
 
 void sendSMS(String pq) {
   mySerial.begin(9600);
-  Serial.println("PQ====================> ");
-  Serial.print(pq);
+  Serial.println(pq);
   Serial.println("Initializing....");
   delay(1000);
   mySerial.println("AT+CMGF=1"); // Configuring TEXT mode
   updateSerial();
-  mySerial.println("AT+CMGS=\"+8801758805632\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+  // mySerial.println("AT+CMGS=\"+8801758805632\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
   //updateSerial();
   updateSerial();
-  mySerial.print(pq);
+  mySerial.println(pq);
   updateSerial();
   mySerial.write(26);      
 }
@@ -133,15 +132,15 @@ void sendSMS(String pq) {
 void setup() {
   Serial.begin(9600);
   //sim_Initialize();
-  Serial.print("Initializing pulse oximeter..");
+  // Serial.println("Initializing pulse oximeter..");
 
     // Initialize sensor
-    if (!pox.begin()) {
-        Serial.println("FAILED");
-        for(;;);
-    } else {
-        Serial.println("SUCCESS");
-    }
+    // if (!pox.begin()) {
+    //     Serial.println("FAILED");
+    //     for(;;);
+    // } else {
+    //     Serial.println("SUCCESS");
+    // }
 
 	
   // lcd.init();                      // initialize the lcd 
@@ -165,10 +164,10 @@ void setup() {
   // lcd.print("f");
 
   // Configure sensor to use 7.6mA for LED drive
-	pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
+	// pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
 
     // Register a callback routine
-  pox.setOnBeatDetectedCallback(onBeatDetected);
+  // pox.setOnBeatDetectedCallback(onBeatDetected);
 
 
 }
@@ -188,7 +187,7 @@ void setup() {
 
 void loop() {
   // Serial.println(millis());
-  pox.update();
+  // pox.update();
 
   // DHT.read11(outPin);
 
@@ -199,15 +198,15 @@ void loop() {
   
 
   // Grab the updated heart rate and SpO2 levels
-  if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
-      Serial.print("Heart rate:");
-      Serial.print(pox.getHeartRate());
-      Serial.print("bpm / SpO2:");
-      Serial.print(pox.getSpO2());
-      Serial.println("%");
+  // if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+  //     Serial.print("Heart rate:");
+  //     Serial.print(pox.getHeartRate());
+  //     Serial.print("bpm / SpO2:");
+  //     Serial.print(pox.getSpO2());
+  //     Serial.println("%");
 
-      tsLastReport = millis();
-  }
+  //     tsLastReport = millis();
+  // }
 
 
   pir_state = CheckMotion();
@@ -228,17 +227,17 @@ void loop() {
   if ((pir_state == 1 || Sound_Sate == 1 || Moisture_State ==1 ) && (( millis() - time2) > 10000) ) 
   {
     sendSMS(prepare_msg(bodytemperature,Moisture_State,pir_state,Sound_Sate));
-    Serial.print("Sending msg");
+    Serial.println("Sending msg");
     time2 = millis();
   }
   
 
   if (millis() - time > delay_MS)
   {
-    Serial.print(bodytemperature); Serial.print("\xC2\xB0"); Serial.print("f"); 
+    // Serial.print(bodytemperature-10.0); Serial.print("\xC2\xB0"); Serial.print("c"); 
     Serial.println();
-    Serial.print(analogRead(moisture));
-    Serial.print(":::::::::::::::::::");
+    // Serial.print(analogRead(moisture));
+    // Serial.print(":::::::::::::::::::");
     Serial.println();
     // lcd.scrollDisplayLeft();
     // lcd.print("Baby Monitoring System");
